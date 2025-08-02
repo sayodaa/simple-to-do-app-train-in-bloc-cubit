@@ -1,14 +1,14 @@
 import 'dart:async';
 
 import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:to_do_app/to_do/data/models/task_model.dart';
 import 'package:uuid/uuid.dart';
 
 part 'task_event.dart';
 part 'task_state.dart';
 
-class TaskBloc extends Bloc<TaskEvent, TaskState> {
+class TaskBloc extends HydratedBloc<TaskEvent, TaskState> {
   TaskBloc() : super(TaskInitial()) {
     on<AddTaskEvent>(_addTask);
     on<RemoveTaskEvent>(_removeTask);
@@ -30,5 +30,17 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       return task.id == event.id ? task.copyWith(isCompleted: !task.isCompleted) : task;
     }).toList();
     emit(TaskUpdated(tasks: newList));
+  }
+  
+  @override
+  TaskState? fromJson(Map<String, dynamic> json) {
+    return TaskUpdated(
+      tasks: (json['todos'] as List).map((e) => TaskModel.fromJson(e)).toList(),
+    );
+  }
+  
+  @override
+  Map<String, dynamic>? toJson(TaskState state) {
+    return {"todos": state.tasks.map((todo) => todo.toJson()).toList()};
   }
 }

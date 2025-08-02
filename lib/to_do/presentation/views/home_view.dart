@@ -32,17 +32,17 @@ class ToDoHomePage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: Colors.grey[200],
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.add, color: Colors.teal),
                         onPressed: () {
-                          bloc.add(AddTaskEvent(title: _controller.text));
+                          bloc.add(AddTaskEvent(title: _controller.text.trim()));
                           _controller.clear();
                         },
                       ),
                     ),
                     onSubmitted: (_) {
-                      bloc.add(AddTaskEvent(title: _controller.text));
+                      bloc.add(AddTaskEvent(title: _controller.text.trim()));
                       _controller.clear();
                     },
                   ),
